@@ -5,7 +5,7 @@
   <ItemGroup>
     <PackageVersion Include="Pulumi" Version="3.71.0" />
     <PackageVersion Include="Pulumi.DigitalOcean" Version="4.36.0" />
-    <PackageVersion Include="Pulumi.Random" Version="3.2.0" />
+    <PackageVersion Include="Pulumi.Random" Version="4.16.7" />
     <PackageVersion Include="Pulumi.Tls" Version="4.11.1" />
   </ItemGroup>
 </Project>
