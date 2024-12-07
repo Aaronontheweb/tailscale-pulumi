@@ -111,12 +111,15 @@ return await Deployment.RunAsync(() =>
         Number = false,
     });
 
+    // make sure the name is unique and somewhat randomized so we don't have to purge SSH fingerprints
+    // and make sure the region name is included in case we have multiple exit-nodes
+    var dropletName = randomNodeName.Result.Apply(c => $"tailscale-droplet-{region}-{c}");
+
     // Create a new Droplet instance
     var droplet = new Droplet("tailscale-droplet", new DropletArgs
     {
-        // make sure the name is unique and somewhat randomized so we don't have to purge SSH fingerprints
-        // and make sure the region name is included in case we have multiple exit-nodes
-        Name = randomNodeName.Result.Apply(c => $"tailscale-droplet-{region}-{c}"),
+
+        Name = dropletName,
         Size = dropletSize,
         Region = region,
         Image = image,
@@ -130,6 +133,7 @@ return await Deployment.RunAsync(() =>
     return new Dictionary<string, object?>
     {
         ["dropletIp"] = droplet.Ipv4Address,
+        ["dropLetName"] = dropletName,
         ["generatedPassword"] = password.Result,
         ["privateKeyPem"] = sshKeyPair.PrivateKeyPem // Export the private key securely
     };
