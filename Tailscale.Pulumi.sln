@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{B0D7912E-E888-400B-9D1F-383D9A3861D0}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+		README.md = README.md
+		src\Directory.Build.props = src\Directory.Build.props
+		src\Directory.Packages.props = src\Directory.Packages.props
+		src\NuGet.config = src\NuGet.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "digitalocean", "digitalocean", "{7D092BA9-513F-4C65-A0F3-865CEC2783FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tailscale.DigitialOcean", "src\digitalocean\Tailscale.DigitialOcean.csproj", "{06456DFF-D341-49F1-A079-0DC21C8AEDB8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{06456DFF-D341-49F1-A079-0DC21C8AEDB8} = {7D092BA9-513F-4C65-A0F3-865CEC2783FD}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{06456DFF-D341-49F1-A079-0DC21C8AEDB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06456DFF-D341-49F1-A079-0DC21C8AEDB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06456DFF-D341-49F1-A079-0DC21C8AEDB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06456DFF-D341-49F1-A079-0DC21C8AEDB8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

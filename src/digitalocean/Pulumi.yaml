@@ -1,0 +1,3 @@
+name: do-tailscale-exitnode
+runtime: dotnet
+description: Provision a configurable sized DigitalOcean Droplet and use Cloud Init to automatically join a tailscale network using a tailscale auth key (provided as a Pulumi secret) - make the size of the droplet and the data center location configurable via par
