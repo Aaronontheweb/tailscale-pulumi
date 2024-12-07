@@ -123,6 +123,7 @@ return await Deployment.RunAsync(() =>
         VpcUuid = vpc.Id,
         UserData = initScript,
         SshKeys = new InputList<string> { sshKey.Fingerprint }, // Attach the SSH key
+        Monitoring = true, // enable free Digital Ocean monitoring
     });
 
     // Export Droplet's IP and generated credentials
