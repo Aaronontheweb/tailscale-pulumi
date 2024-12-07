@@ -1,0 +1,4 @@
+config:
+  do-tailscale-exitnode:dropletImage: ubuntu-24-04-x64
+  do-tailscale-exitnode:dropletRegion: nyc1
+  do-tailscale-exitnode:dropletSize: s-1vcpu-1gb

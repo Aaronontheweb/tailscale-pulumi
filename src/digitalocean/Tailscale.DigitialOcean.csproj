@@ -6,6 +6,8 @@
 
 <ItemGroup>
   <PackageReference Include="Pulumi"/>
+  <PackageReference Include="Pulumi.DigitalOcean" />
+  <PackageReference Include="Pulumi.Tls" />
 </ItemGroup>
 
 </Project>
