@@ -20,6 +20,9 @@ return await Deployment.RunAsync(() =>
                              #cloud-config
                              runcmd:
                                - curl -fsSL https://tailscale.com/install.sh | sh
+                               - echo 'net.ipv4.ip_forward = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
+                               - echo 'net.ipv6.conf.all.forwarding = 1' | tee -a /etc/sysctl.d/99-tailscale.conf
+                               - sysctl -p /etc/sysctl.d/99-tailscale.conf
                                - tailscale up --authkey {tailscaleAuthKey.Apply(key => key)} --accept-routes --ssh --advertise-exit-node
                            """;
     
