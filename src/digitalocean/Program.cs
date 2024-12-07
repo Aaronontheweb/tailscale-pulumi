@@ -10,17 +10,9 @@ return await Deployment.RunAsync(() =>
     var dropletSize = config.Require("dropletSize");
     var region = config.Require("dropletRegion");
     var image = config.Require("dropletImage");
-    var username = config.Require("nonRootUsername"); // Username from config
 
     // Retrieve the Tailscale auth key from Pulumi secrets
     var tailscaleAuthKey = config.RequireSecret("tailscaleAuthKey");
-
-    // Generate a random password for the user
-    var password = new Pulumi.Random.RandomPassword("user-password", new Pulumi.Random.RandomPasswordArgs
-    {
-        Length = 16,
-        Special = true,
-    });
 
     // Generate a new SSH key pair
     var sshKeyPair = new PrivateKey("ssh-key", new PrivateKeyArgs
@@ -37,64 +29,45 @@ return await Deployment.RunAsync(() =>
     });
 
     // Define a script to be run when the VM starts up
-    var initScript = tailscaleAuthKey.Apply(authKey => password.Result.Apply(userPassword => $$"""
-        #!/bin/bash
-        set -eux  # Exit on error and print commands as they are executed
-
-        # Log the start of Tailscale installation
-        echo 'Starting Tailscale installation...' > /tmp/tailscale-setup.log
-
-        # Wait for apt-get to release the lock
-        while sudo fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do
-            echo 'Waiting for apt lock...' >> /tmp/tailscale-setup.log
-            sleep 5
-        done
-
-        # Retry mechanism for downloading and installing Tailscale
-        for i in {1..5}; do
-            curl -fsSL https://tailscale.com/install.sh | sh && break || {
-                echo 'Tailscale installation failed, retrying in 5 seconds...' >> /tmp/tailscale-setup.log
-                sleep 5
-            }
-        done
-
-        # Check if Tailscale was installed
-        if ! command -v tailscale > /dev/null; then
-            echo 'Tailscale installation failed after 5 attempts' >> /tmp/tailscale-setup.log
-            exit 1
-        fi
-
-        # Enable IP forwarding
-        echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
-        echo 'net.ipv6.conf.all.forwarding = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
-        sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
-
-        # Start Tailscale with the provided auth key and enable SSH
-        echo 'Starting Tailscale...' >> /tmp/tailscale-setup.log
-        sudo tailscale up --authkey="{{authKey}}" --ssh --advertise-exit-node --accept-routes >> /tmp/tailscale-setup.log 2>&1
-
-        # Verify Tailscale status
-        tailscale status >> /tmp/tailscale-setup.log 2>&1
-
-        # Create a new user with sudo privileges
-        NEW_USER="{{username}}"
-        NEW_USER_PASSWORD="{{userPassword}}"
-        echo "Creating new user: $NEW_USER" >> /tmp/tailscale-setup.log
-        sudo adduser --disabled-password --gecos "" $NEW_USER
-        echo "$NEW_USER:$NEW_USER_PASSWORD" | sudo chpasswd
-        sudo usermod -aG sudo $NEW_USER
-
-        # Configure SSH for the new user
-        echo "Setting up SSH for $NEW_USER" >> /tmp/tailscale-setup.log
-        sudo mkdir -p /home/$NEW_USER/.ssh
-        sudo cp /root/.ssh/authorized_keys /home/$NEW_USER/.ssh/authorized_keys
-        sudo chown -R $NEW_USER:$NEW_USER /home/$NEW_USER/.ssh
-        sudo chmod 700 /home/$NEW_USER/.ssh
-        sudo chmod 600 /home/$NEW_USER/.ssh/authorized_keys
-
-        # Log the successful setup
-        echo "New user $NEW_USER created and configured for SSH access." >> /tmp/tailscale-setup.log
-    """));
+    var initScript = tailscaleAuthKey.Apply(authKey => $$"""
+                                                             #!/bin/bash
+                                                             set -eux  # Exit on error and print commands as they are executed
+                                                         
+                                                             # Log the start of Tailscale installation
+                                                             echo 'Starting Tailscale installation...' > /tmp/tailscale-setup.log
+                                                         
+                                                             # Wait for apt-get to release the lock
+                                                             while sudo fuser /var/lib/apt/lists/lock >/dev/null 2>&1; do
+                                                                 echo 'Waiting for apt lock...' >> /tmp/tailscale-setup.log
+                                                                 sleep 5
+                                                             done
+                                                         
+                                                             # Retry mechanism for downloading and installing Tailscale
+                                                             for i in {1..5}; do
+                                                                 curl -fsSL https://tailscale.com/install.sh | sh && break || {
+                                                                     echo 'Tailscale installation failed, retrying in 5 seconds...' >> /tmp/tailscale-setup.log
+                                                                     sleep 5
+                                                                 }
+                                                             done
+                                                         
+                                                             # Check if Tailscale was installed
+                                                             if ! command -v tailscale > /dev/null; then
+                                                                 echo 'Tailscale installation failed after 5 attempts' >> /tmp/tailscale-setup.log
+                                                                 exit 1
+                                                             fi
+                                                         
+                                                             # Enable IP forwarding
+                                                             echo 'net.ipv4.ip_forward = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
+                                                             echo 'net.ipv6.conf.all.forwarding = 1' | sudo tee -a /etc/sysctl.d/99-tailscale.conf
+                                                             sudo sysctl -p /etc/sysctl.d/99-tailscale.conf
+                                                         
+                                                             # Start Tailscale with the provided auth key and enable SSH
+                                                             echo 'Starting Tailscale...' >> /tmp/tailscale-setup.log
+                                                             sudo tailscale up --authkey="{{authKey}}" --ssh --advertise-exit-node --accept-routes >> /tmp/tailscale-setup.log 2>&1
+                                                         
+                                                             # Verify Tailscale status
+                                                             tailscale status >> /tmp/tailscale-setup.log 2>&1
+                                                         """);
 
     // Create a DigitalOcean VPC
     var vpc = new Vpc("my-vpc", new VpcArgs
@@ -118,7 +91,6 @@ return await Deployment.RunAsync(() =>
     // Create a new Droplet instance
     var droplet = new Droplet("tailscale-droplet", new DropletArgs
     {
-
         Name = dropletName,
         Size = dropletSize,
         Region = region,
@@ -134,7 +106,6 @@ return await Deployment.RunAsync(() =>
     {
         ["dropletIp"] = droplet.Ipv4Address,
         ["dropLetName"] = dropletName,
-        ["generatedPassword"] = password.Result,
         ["privateKeyPem"] = sshKeyPair.PrivateKeyPem // Export the private key securely
     };
 });
