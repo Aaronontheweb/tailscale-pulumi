@@ -1,6 +1,11 @@
 name: pr_validation
 
 on:
+  push:
+    branches:
+      - master
+      - dev
+      - main
   pull_request:
     branches:
       - master
