@@ -88,10 +88,31 @@ By default, all exit nodes and subnet routers in Tailscale require explicit appr
 
 #### SSHing to Your Exit Node
 
-Digital Ocean creates a standard `root` account on all of its droplets, so you can SSH to your exit node using the following command:
+This program creates a public / private `ssh` key pair and adds it to your Digital Ocean account, and we can use that to avoid password-based authentication with the `root` account.
+
+First, you will want to export the `.pem` containing the private `ssh` key onto the machine you want to use to access the Droplet:
 
 ```shell
-ssh root@tailscale-droplet 
+pulumi stack output privateKeyPem --show-secrets > ~/.ssh/do2_key
+chmod 600 ~/.ssh/do2_key
+ssh-add ~/.ssh/do2_key
 ```
 
-You may need to change the `root` password in the Digital Ocean console if you're having trouble logging in - this is a security requirement enforced by DO.
+> [!note]
+> The file name, `do2_key`, does not matter. You can pick an arbitrary name for this key file.
+
+If you get an error complaining about `ssh-add` not working due to no authentication agent being available, run the following command first:
+
+```shell
+eval $(ssh-agent -s)
+```
+
+This will start the `ssh-agent` process in the background and `ssh-add` will work once that's done.
+
+After all of that is done, you can now use tailscale to authenticate against your droplet name - you will need to find this name, since it's slightly randomized, in your Digital Ocean or Tailscale admin console.
+
+```shell
+ssh root@[dropletname]
+```
+
+No password should be required from this point onward - good hunting!
