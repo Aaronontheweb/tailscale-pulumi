@@ -97,6 +97,7 @@ return await Deployment.RunAsync(() =>
         Image = image,
         VpcUuid = vpc.Id,
         UserData = initScript,
+        Ipv6 = true,
         SshKeys = new InputList<string> { sshKey.Fingerprint }, // Attach the SSH key
         Monitoring = true, // enable free Digital Ocean monitoring
     });
