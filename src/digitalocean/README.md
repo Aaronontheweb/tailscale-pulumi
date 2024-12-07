@@ -79,3 +79,19 @@ Now this droplet will be deployed to London instead of NYC.
 ### 6 - Deploy!
 
 To deploy, just run `pulumi up` on your project.
+
+It may take a couple of minutes for the Droplet to provision and successfully join the tailnet, but you will see the node appear in your Tailscale devices list upon successful installation.
+
+#### Approving Your Exit Node
+
+By default, all exit nodes and subnet routers in Tailscale require explicit approval - please remember to [approve your exit node Tailscale admin console](https://tailscale.com/kb/1103/exit-nodes#allow-the-exit-node-from-the-admin-console)!
+
+#### SSHing to Your Exit Node
+
+Digital Ocean creates a standard `root` account on all of its droplets, so you can SSH to your exit node using the following command:
+
+```shell
+ssh root@tailscale-droplet 
+```
+
+You may need to change the `root` password in the Digital Ocean console if you're having trouble logging in - this is a security requirement enforced by DO.
