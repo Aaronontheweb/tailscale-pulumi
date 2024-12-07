@@ -30,7 +30,7 @@ return await Deployment.RunAsync(() =>
     var vpc = new Vpc("my-vpc", new VpcArgs
     {
         Region = region,
-        IpRange = "10.10.10.0/24", // make sure this doesn't overlap with other networks on your account
+        IpRange = "10.156.10.0/24", // make sure this doesn't overlap with other networks on your account
     });
 
     // Create a new Droplet instance
