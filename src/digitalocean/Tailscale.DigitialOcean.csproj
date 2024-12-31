@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+<PropertyGroup>
+  <OutputType>Exe</OutputType>
+</PropertyGroup>
+
+<ItemGroup>
+  <PackageReference Include="Pulumi"/>
+  <PackageReference Include="Pulumi.DigitalOcean" />
+  <PackageReference Include="Pulumi.Random" />
+  <PackageReference Include="Pulumi.Tls" />
+</ItemGroup>
+
+</Project>

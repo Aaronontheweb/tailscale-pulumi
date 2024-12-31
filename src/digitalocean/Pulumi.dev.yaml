@@ -1,0 +1,6 @@
+config:
+  do-tailscale-exitnode:dropletImage: ubuntu-24-04-x64
+  do-tailscale-exitnode:dropletRegion: nyc1
+  do-tailscale-exitnode:dropletSize: s-1vcpu-1gb
+  do-tailscale-exitnode:tailscaleAuthKey:
+    secure: AAABAAA9PK4VcAjH/aVVyKIdP8erof7ApeFEqJ8a35wWIRl2HXxTViNNLbpX3e49goOOxlU0rw== # Not a real auth key, but a placeholder
