@@ -71,10 +71,11 @@ return await Deployment.RunAsync(() =>
                                                          """);
 
     // Create a DigitalOcean VPC
-    var vpc = new Vpc("my-vpc", new VpcArgs
+    var vpc = new Vpc($"my-vpc-{region}", new VpcArgs
     {
         Region = region,
-        IpRange = "10.156.10.0/24", // Ensure no overlap with other networks
+        Name = $"tailscale-vpc-{region}",
+        IpRange = "10.156.11.0/24", // Ensure no overlap with other networks
     });
 
     var randomNodeName = new Pulumi.Random.RandomString("server-name", new Pulumi.Random.RandomStringArgs
